@@ -8,6 +8,7 @@ function AuthForm () {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [isLogin, setIsLogin] = useState(true);
     const [error, setError] = useState('');
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const handleSubmit = async(e) => {
         e.preventDefault();
@@ -57,6 +58,7 @@ function AuthForm () {
                 setPassword('');
                 setConfirmPassword('');
                 setError('');
+                setIsLoggedIn(true);
 
                 alert('User has successfully signed up');
             } else {
@@ -67,7 +69,7 @@ function AuthForm () {
             setError('An error occurred while signing up or logging in');
         }
     };
-    if (!isLogin) {
+    if (isLoggedIn) {
         return (
           <Container>
             <Row>
