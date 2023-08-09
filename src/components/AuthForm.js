@@ -13,6 +13,7 @@ function AuthForm() {
   const [showProfilePage, setShowProfilePage] = useState(false);
   const [fullName, setFullName] = useState('');
 const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
+const [userProfile, setUserProfile] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,6 +62,8 @@ const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
         setIsLoggedIn(true);
         setProfileIncomplete(true);
 
+        fetchUserProfile();
+
         alert('User has successfully signed up');
       } else {
         const data = await response.json();
@@ -103,6 +106,34 @@ const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
       }
     } catch (error) {
       setError('An error occurred while updating user details');
+    }
+  };
+
+  const fetchUserProfile = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(
+        `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDLfziEdsH_utwbMdIw8V0olRmeIUAj0V0`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            idToken: token,
+          }),
+        }
+      );
+  
+      if (response.ok) {
+        const data = await response.json();
+        setUserProfile(data.users[0]); // Assuming the response contains a single user object
+      } else {
+        const data = await response.json();
+        setError(data.error.message);
+      }
+    } catch (error) {
+      setError('An error occurred while fetching user profile');
     }
   };
 
@@ -167,14 +198,13 @@ const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
       return (
         <Container>
           <Row>
-            <Col xs={12} md={6} className="mx-auto">
-              <section className={classes.auth}>
-                <div className="welcome-screen">
-                  <h2>Welcome to Expense Tracker</h2>
-                </div>
-              </section>
-            </Col>
-          </Row>
+          <Col>
+            <h2>Welcome to Expense Tracker</h2>
+            <p>Name: {userProfile.displayName}</p>
+            <p>Email: {userProfile.email}</p>
+            {/* Display other profile data here */}
+          </Col>
+        </Row>
         </Container>
       );
     }
