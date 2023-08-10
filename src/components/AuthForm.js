@@ -15,6 +15,7 @@ function AuthForm() {
   const [fullName, setFullName] = useState('');
 const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
 const [userProfile, setUserProfile] = useState(null);
+const [isPasswordReset, setIsPasswordReset] = useState(false);
 
 const logout = () => {
   localStorage.removeItem('token');
@@ -40,6 +41,35 @@ const sendEmailVerification = async () => {
   } catch (error) {
     console.error(error);
     alert('An error occurred while sending the verification email.');
+  }
+};
+
+const handleForgotPassword = async () => {
+  // Check if the email field is filled
+  if (!email) {
+    setError('Please enter your email');
+    return;
+  }
+
+  try {
+    const apiKey = 'AIzaSyDLfziEdsH_utwbMdIw8V0olRmeIUAj0V0';
+    const url = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${apiKey}`;
+
+    const response = await axios.post(url, {
+      requestType: 'PASSWORD_RESET',
+      email: email,
+    });
+
+    if (response.status === 200) {
+      setIsPasswordReset(true);
+      setError('');
+      alert('Password reset link has been sent to your email. Please check your inbox.');
+    } else {
+      throw new Error('An error occurred while sending the password reset link.');
+    }
+  } catch (error) {
+    console.error(error);
+    setError('An error occurred while sending the password reset link.');
   }
 };
 
@@ -281,10 +311,19 @@ const sendEmailVerification = async () => {
                     />
                   </Form.Group>
                 )}
+                {isPasswordReset ? (
+                <p>Password reset link has been sent. Please check your email.</p>
+              ) : (
                 <Button type="submit">{isLogin ? 'Login' : 'Sign Up'}</Button>
+                 )}
                 <p onClick={() => setIsLogin(!isLogin)}>
                   {isLogin ? 'Create an account' : 'Already have an account? Login'}
                 </p>
+                {!isPasswordReset && (
+                <Button onClick={handleForgotPassword}>
+                  Forgot Password
+                </Button>
+              )}
               </Form>
             </div>
           </section>
