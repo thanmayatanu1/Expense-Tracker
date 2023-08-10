@@ -16,6 +16,11 @@ function AuthForm() {
 const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
 const [userProfile, setUserProfile] = useState(null);
 
+const logout = () => {
+  localStorage.removeItem('token');
+  setIsLoggedIn(false);
+};
+
 const sendEmailVerification = async () => {
   try {
     const apiKey = 'AIzaSyDLfziEdsH_utwbMdIw8V0olRmeIUAj0V0';
@@ -191,6 +196,7 @@ const sendEmailVerification = async () => {
               onChange={(e) => setProfilePhotoUrl(e.target.value)}
             />
           </div>
+          <Button onClickCapture={logout}>logout user</Button>
 
           <button className={classes.button}  type="button" onClick={handleUpdateProfile}>
             Update Profile
@@ -209,6 +215,7 @@ const sendEmailVerification = async () => {
                 <section className={classes.auth}>
                   <div className="profile-incomplete">
                     <h2>Welcome to Expense Tracker</h2>
+                    <Button onClick={logout}>logout user</Button>
                     <h3>Your profile is incomplete</h3>
                     <p>Please complete your profile to continue</p>
                     <Button onClick={handleCompleteProfile}>Complete Profile</Button>
@@ -228,6 +235,7 @@ const sendEmailVerification = async () => {
             <p>Name: {userProfile.displayName}</p>
             <p>Email: {userProfile.email}</p>
             {/* Display other profile data here */}
+            
           </Col>
         </Row>
         </Container>
