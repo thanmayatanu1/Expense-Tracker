@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import classes from './AuthForm.module.css';
+import axios from 'axios';
 
 function AuthForm() {
   const [email, setEmail] = useState('');
@@ -14,6 +15,29 @@ function AuthForm() {
   const [fullName, setFullName] = useState('');
 const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
 const [userProfile, setUserProfile] = useState(null);
+
+const sendEmailVerification = async () => {
+  try {
+    const apiKey = 'AIzaSyDLfziEdsH_utwbMdIw8V0olRmeIUAj0V0';
+    const idToken = localStorage.getItem('token');
+    const url = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${apiKey}`;
+
+    const response = await axios.post(url, {
+      requestType: 'VERIFY_EMAIL',
+      idToken: idToken,
+    });
+
+    if (response.status === 200) {
+      alert('Verification email sent. Please check your email.');
+    } else {
+      throw new Error('An error occurred while sending the verification email.');
+    }
+  } catch (error) {
+    console.error(error);
+    alert('An error occurred while sending the verification email.');
+  }
+};
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -63,6 +87,7 @@ const [userProfile, setUserProfile] = useState(null);
         setProfileIncomplete(true);
 
         fetchUserProfile();
+        sendEmailVerification();
 
         alert('User has successfully signed up');
       } else {
