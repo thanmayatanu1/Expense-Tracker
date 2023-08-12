@@ -3,6 +3,8 @@ import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import classes from './AuthForm.module.css';
 import axios from 'axios';
 
+
+
 function AuthForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -201,9 +203,11 @@ const handleForgotPassword = async () => {
     if (profileIncomplete) {
       if (showProfilePage) {
         return (
+          
           <Container>
               <Row>
     <Col xs={12} md={6} className="mx-auto">
+      
       <div className={classes.profile}>
         <h2>Complete Your Profile</h2>
         <form>
@@ -237,7 +241,8 @@ const handleForgotPassword = async () => {
   </Row>
           </Container>
         );
-      } else {
+      }
+       else {
         return (
           <Container>
             <Row>
@@ -332,5 +337,6 @@ const handleForgotPassword = async () => {
     </Container>
   );
 }
+
 
 export default AuthForm;
