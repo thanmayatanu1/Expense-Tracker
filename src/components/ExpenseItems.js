@@ -35,6 +35,8 @@ const ExpenseTracker = () => {
       description: description,
       category: category,
     };
+
+    //to post request inorder to store the data at the backend firebase
     try {
       const response = await
       fetch("https://expense-tracker-165fb-default-rtdb.firebaseio.com/expenses.json", {
@@ -62,6 +64,8 @@ const ExpenseTracker = () => {
   }
 };
 
+//to retrieve data we use the useEffect to get the data saved in firebase after post 
+
 useEffect(() => {
     const fetchExpenses = async () => {
       try {
@@ -87,6 +91,56 @@ useEffect(() => {
 
     fetchExpenses();
   }, []);
+
+  //delete expense When the user clicks on it, make a DELETE request and remove the expense from the database.
+
+  const handleDeleteExpense = async (expenseId) => {
+    try {
+      const response = await fetch(`https://expense-tracker-165fb-default-rtdb.firebaseio.com/expenses/${expenseId}.json`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete expense');
+      }
+
+      setExpenses(expenses.filter((expense) => expense.id !== expenseId));
+      console.log('Expense successfully deleted');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  //edit/update  When the user clicks on the Edit button, the user should be able to edit all the expenses
+  //Once he is done Editing and clicks on Submit , do a PUT request and update the values.
+
+  const handleEditExpense = async (expenseId, updatedExpense) => {
+  try {
+    const response = await fetch(`https://expense-tracker-165fb-default-rtdb.firebaseio.com/expenses/${expenseId}.json`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedExpense),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update expense');
+    }
+
+    const updatedExpenses = expenses.map((expense) => {
+      if (expense.id === expenseId) {
+        return { ...expense, ...updatedExpense };
+      }
+      return expense;
+    });
+
+    setExpenses(updatedExpenses);
+    console.log('Expense successfully updated');
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   return (
     <div>
@@ -114,14 +168,18 @@ useEffect(() => {
             </label>
             <br />
             <button type="submit">Add Expense</button>
+            
           </form>
           <h2>Expenses:</h2>
-          <ul>
-            {expenses.map((expense, index) => (
-              <li key={index}>
-                Amount: {expense.amount}, Description: {expense.description}, Category: {expense.category}
-              </li>
-            ))}
+        <ul>
+          {expenses.map((expense) => (
+            <li key={expense.id}>
+              Amount: {expense.amount}, Description: {expense.description}, Category: {expense.category}
+              <button onClick={() => handleDeleteExpense(expense.id)}>Delete</button>
+              <button onClick={() => handleEditExpense(expense.id)}>Edit</button>
+            </li>
+          ))}
+            
           </ul>
           <button onClick={handleLogout}>Logout</button>
         </div>
