@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const ExpenseTracker = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -27,7 +27,7 @@ const ExpenseTracker = () => {
     setCategory(e.target.value);
   };
 
-  const handleExpenseSubmit = (e) => {
+  const handleExpenseSubmit = async (e) => {
     e.preventDefault();
 
     const newExpense = {
@@ -35,13 +35,58 @@ const ExpenseTracker = () => {
       description: description,
       category: category,
     };
+    try {
+      const response = await
+      fetch("https://expense-tracker-165fb-default-rtdb.firebaseio.com/expenses.json", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newExpense),
+      });
+
+      if(!response.ok)
+      {
+        throw new Error('failed to add expense');
+      }
+    
+
+    
 
     setExpenses([...expenses, newExpense]);
-
     setAmount('');
     setDescription('');
     setCategory('Food');
-  };
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+useEffect(() => {
+    const fetchExpenses = async () => {
+      try {
+        const response = await fetch('https://expense-tracker-165fb-default-rtdb.firebaseio.com/expenses.json');
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch expenses');
+        }
+
+        const data = await response.json();
+
+        if (data) {
+          const fetchedExpenses = Object.keys(data).map((key) => ({
+            id: key,
+            ...data[key],
+          }));
+          setExpenses(fetchedExpenses);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchExpenses();
+  }, []);
 
   return (
     <div>

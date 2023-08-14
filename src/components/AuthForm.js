@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import classes from './AuthForm.module.css';
 import axios from 'axios';
+import ExpenseTracker from './ExpenseItems';
 
 
 
@@ -254,6 +255,8 @@ const handleForgotPassword = async () => {
                     <h3>Your profile is incomplete</h3>
                     <p>Please complete your profile to continue</p>
                     <Button onClick={handleCompleteProfile}>Complete Profile</Button>
+                    <ExpenseTracker />
+
                   </div>
                 </section>
               </Col>
