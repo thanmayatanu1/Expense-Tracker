@@ -255,7 +255,7 @@ const handleForgotPassword = async () => {
                     <h3>Your profile is incomplete</h3>
                     <p>Please complete your profile to continue</p>
                     <Button onClick={handleCompleteProfile}>Complete Profile</Button>
-                    <ExpenseTracker />
+                    <ExpenseTracker key="expense-tracker" />
 
                   </div>
                 </section>

@@ -176,7 +176,7 @@ useEffect(() => {
             <li key={expense.id}>
               Amount: {expense.amount}, Description: {expense.description}, Category: {expense.category}
               <button onClick={() => handleDeleteExpense(expense.id)}>Delete</button>
-              <button onClick={() => handleEditExpense(expense.id)}>Edit</button>
+              <button onClick={() => handleEditExpense(expense.id, expense)}>Edit</button>
             </li>
           ))}
             
