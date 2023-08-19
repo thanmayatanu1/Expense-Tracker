@@ -2,19 +2,18 @@
 
 import './App.css';
 import AuthForm from './components/AuthForm';
+import store from './components/store';
 
 
 
-function App() {
-  
+import { Provider } from 'react-redux';
+
+const App = () => {
   return (
-    <div className="App">
+    <Provider store={store}>
       <AuthForm />
-    
-     
-      
-    </div>
+    </Provider>
   );
-}
+};
 
 export default App;
