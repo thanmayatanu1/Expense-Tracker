@@ -1,10 +1,12 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { toggleTheme } from './themeActions';
 
 const ExpenseTracker = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
   const expenses = useSelector(state => state.expenses.expenses);
+  const theme = useSelector(state => state.theme);
 
   const handleLogin = () => {
     dispatch({ type: 'LOGIN', payload: { token: 'your-token-value', userId: 'your-user-id' } });
@@ -40,11 +42,27 @@ const ExpenseTracker = () => {
     dispatch({ type: 'EDIT_EXPENSE', payload: { expenseId, updatedExpense } });
   };
 
+  const handleToggleTheme = () => {
+    dispatch(toggleTheme());
+  };
+
+  const downloadExpensesAsCSV = () => {
+    const csvContent = "data:text/csv;charset=utf-8," + expenses.map(expense => Object.values(expense).join(",")).join("\n");
+
+    const link = document.createElement("a");
+    link.setAttribute("href", encodeURI(csvContent));
+    link.setAttribute("download", "expenses.csv");
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   // Calculate total expenses
   const totalExpenses = expenses.reduce((total, expense) => total + expense.amount, 0);
 
   return (
-    <>
+    <div className={`app ${theme}`}>
       {isLoggedIn ? (
         <div>
           <h1>Expense Tracker</h1>
@@ -83,6 +101,8 @@ const ExpenseTracker = () => {
           </ul>
           {totalExpenses > 10000 && <button>Activate Premium</button>}
           <button onClick={handleLogout}>Logout</button>
+          <button onClick={handleToggleTheme}>Toggle Theme</button>
+          <button onClick={downloadExpensesAsCSV}>Download File</button>
         </div>
       ) : (
         <div>
@@ -90,7 +110,7 @@ const ExpenseTracker = () => {
           <button onClick={handleLogin}>Login</button>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
