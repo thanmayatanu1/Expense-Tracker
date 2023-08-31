@@ -115,3 +115,59 @@
   .button:hover {
     background-color: #2a75e1;
   }
+
+  .main{
+    display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #f2f2f2;
+}
+
+.left{
+    flex: 1;
+    
+}
+
+.right{
+    background-color: rgb(242, 199, 144);
+    
+    display: flex;
+    align-items: center;
+    
+}
+
+
+.right span {
+  margin-right: 10px;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.profile span {
+  margin-right: 10px;
+}
+
+.completeprofile {
+  color: blue;
+  cursor: pointer;
+}
+
+.logoutbutton {
+  background-color: red;
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-left: auto;
+  
+}
+
+.verticalline {
+  border-bottom: 2px solid black;
+  margin-top: 20px;
+}
+

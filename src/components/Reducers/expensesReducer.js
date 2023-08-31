@@ -18,19 +18,20 @@ const expensesReducer = (state = initialState, action) => {
         expenses: state.expenses.filter((expense) => expense.id !== action.payload),
       };
       case 'EDIT_EXPENSE':
-        const { expenseId, updatedExpense } = action.payload;
+  const { expenseId, updatedExpense } = action.payload;
+  return {
+    ...state,
+    expenses: state.expenses.map((expense) => {
+      if (expense.id === expenseId) {
         return {
-          ...state,
-          expenses: state.expenses.map((expense) => {
-            if (expense.id === expenseId) {
-              return {
-                ...expense,
-                ...updatedExpense,
-              };
-            }
-            return expense;
-          }),
+          ...expense,
+          ...updatedExpense,
         };
+      }
+      return expense;
+    }),
+  };
+        
       default:
         return state;
     }

@@ -1,12 +1,37 @@
-import React from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { useSelector, useDispatch } from 'react-redux';
-import { toggleTheme } from './themeActions';
+import './LightTheme.css';
+import './DarkTheme.css';
+import React, { useEffect, useState } from 'react';
+import classes from './ExpenseItems.module.css';
+
 
 const ExpenseTracker = () => {
+  const [theme, setTheme] = useState('light');
+  const [isPremiumActivated, setIsPremiumActivated] = useState(false);
+
+  const toggleTheme = () => {
+    if (theme === 'light') {
+      setTheme('dark');
+      document.body.classList.remove('light-theme');
+      document.body.classList.add('dark-theme');
+    } else {
+      setTheme('light');
+      document.body.classList.remove('dark-theme');
+      document.body.classList.add('light-theme');
+    }
+  };
+
+  useEffect(() => {
+    document.body.classList.add(`${theme}-theme`);
+  }, [theme]);
+
+
+
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
   const expenses = useSelector(state => state.expenses.expenses);
-  const theme = useSelector(state => state.theme);
+
 
   const handleLogin = () => {
     dispatch({ type: 'LOGIN', payload: { token: 'your-token-value', userId: 'your-user-id' } });
@@ -24,6 +49,7 @@ const ExpenseTracker = () => {
     const category = e.target.category.value;
 
     const newExpense = {
+      id: uuidv4(), // Generate a unique ID
       amount,
       description,
       category,
@@ -38,13 +64,10 @@ const ExpenseTracker = () => {
     dispatch({ type: 'DELETE_EXPENSE', payload: expenseId });
   };
 
-  const handleEditExpense = async (expenseId, updatedExpense) => {
-    dispatch({ type: 'EDIT_EXPENSE', payload: { expenseId, updatedExpense } });
+  const handleEditExpense = (expenseId) => {
+    dispatch({ type: 'DELETE_EXPENSE', payload:  expenseId  });
   };
-
-  const handleToggleTheme = () => {
-    dispatch(toggleTheme());
-  };
+  
 
   const downloadExpensesAsCSV = () => {
     const csvContent = "data:text/csv;charset=utf-8," + expenses.map(expense => Object.values(expense).join(",")).join("\n");
@@ -62,9 +85,9 @@ const ExpenseTracker = () => {
   const totalExpenses = expenses.reduce((total, expense) => total + expense.amount, 0);
 
   return (
-    <div className={`app ${theme}`}>
+    <div className={classes.expensetracker} >
       {isLoggedIn ? (
-        <div>
+        <div className={classes.formgroup}>
           <h1>Expense Tracker</h1>
           <form onSubmit={handleExpenseSubmit}>
             <label>
@@ -89,25 +112,52 @@ const ExpenseTracker = () => {
             <br />
             <button type="submit">Add Expense</button>
           </form>
-          <h2>Expenses:</h2>
-          <ul>
-            {expenses.map((expense) => (
-              <li key={expense.id}>
-                Amount: {expense.amount}, Description: {expense.description}, Category: {expense.category}
-                <button onClick={() => handleDeleteExpense(expense.id)}>Delete</button>
-                <button onClick={() => handleEditExpense(expense.id, expense)}>Edit</button>
-              </li>
-            ))}
-          </ul>
-          {totalExpenses > 10000 && <button>Activate Premium</button>}
-          <button onClick={handleLogout}>Logout</button>
-          <button onClick={handleToggleTheme}>Toggle Theme</button>
-          <button onClick={downloadExpensesAsCSV}>Download File</button>
+          
+          <h3>Expenses:</h3>
+          <table className={classes.expensesTable}>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Amount</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Delete</th>
+                <th>Edit</th>
+              </tr>
+            </thead>
+            <tbody>
+              {expenses.map((expense, index) => (
+                <tr key={expense.id}>
+                  <td>{index + 1}</td>
+                  <td>{expense.amount}</td>
+                  <td>{expense.description}</td>
+                  <td>{expense.category}</td>
+                  <td>
+                    <button className={classes.deleteButton} onClick={() => handleDeleteExpense(expense.id)}>
+                      Delete
+                    </button>
+                  </td>
+                  <td>
+                    <button className={classes.editButton} onClick={() => handleEditExpense(expense.id)}>
+                      Edit
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {totalExpenses > 10000 && 
+          <button className = {classes.togglebutton} onClick={() => setIsPremiumActivated(true)}>Activate Premium</button>}
+          <button className = {classes.closebutton} onClick={handleLogout}>Close</button>
+          {isPremiumActivated && (
+          <button className = {classes.togglebutton} onClick={toggleTheme}>Toggle Theme</button>
+          )}
+          <button className = {classes.downloadbutton} onClick={downloadExpensesAsCSV}>Download File</button>
         </div>
       ) : (
-        <div>
-          <h1>Login</h1>
-          <button onClick={handleLogin}>Login</button>
+        <div >
+          <h1 className={classes.addexpense} onClick={handleLogin}> Click Here To Add Expense</h1>
+          
         </div>
       )}
     </div>

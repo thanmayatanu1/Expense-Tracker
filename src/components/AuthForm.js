@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import classes from './AuthForm.module.css';
 import axios from 'axios';
-import ExpenseTracker from './ExpenseItems';
+import  WelcomeScreen from './WelcomeScreen';
+import ProfilePage from './ProfilePage';
 
 
-
-function AuthForm() {
+  function AuthForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -16,9 +16,9 @@ function AuthForm() {
   const [profileIncomplete, setProfileIncomplete] = useState(true);
   const [showProfilePage, setShowProfilePage] = useState(false);
   const [fullName, setFullName] = useState('');
-const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
-const [userProfile, setUserProfile] = useState(null);
-const [isPasswordReset, setIsPasswordReset] = useState(false);
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
+  const [userProfile, setUserProfile] = useState(null);
+  const [isPasswordReset, setIsPasswordReset] = useState(false);
 
 const logout = () => {
   localStorage.removeItem('token');
@@ -204,65 +204,23 @@ const handleForgotPassword = async () => {
     if (profileIncomplete) {
       if (showProfilePage) {
         return (
-          
-          <Container>
-              <Row>
-    <Col xs={12} md={6} className="mx-auto">
-      
-      <div className={classes.profile}>
-        <h2>Complete Your Profile</h2>
-        <form>
-          <div className={classes.form}>
-            <label htmlFor="fullName">Full Name</label>
-            <input
-              type="text"
-              id="fullName"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-            />
-          </div>
-
-          <div className={classes.form}>
-            <label htmlFor="profilePhotoUrl">Profile Photo URL</label>
-            <input
-              type="text"
-              id="profilePhotoUrl"
-              value={profilePhotoUrl}
-              onChange={(e) => setProfilePhotoUrl(e.target.value)}
-            />
-          </div>
-          <Button onClickCapture={logout}>logout user</Button>
-
-          <button className={classes.button}  type="button" onClick={handleUpdateProfile}>
-            Update Profile
-          </button>
-        </form>
-      </div>
-    </Col>
-  </Row>
-          </Container>
+          <ProfilePage
+            fullName={fullName}
+            profilePhotoUrl={profilePhotoUrl}
+            setFullName={setFullName}
+            setProfilePhotoUrl={setProfilePhotoUrl}
+            logout={logout}
+            handleUpdateProfile={handleUpdateProfile}
+          />
         );
       }
        else {
         return (
-          <Container>
-            <Row>
-              <Col xs={12} md={6} className="mx-auto">
-                <section className={classes.auth}>
-                  <div className="profile-incomplete">
-                    <h2>Welcome to Expense Tracker</h2>
-                    <Button onClick={logout}>logout user</Button>
-                    <h3>Your profile is incomplete</h3>
-                    <p>Please complete your profile to continue</p>
-                    <Button onClick={handleCompleteProfile}>Complete Profile</Button>
-                    <ExpenseTracker key="expense-tracker" />
-
-                  </div>
-                </section>
-              </Col>
-            </Row>
-          </Container>
-        );
+          <div>
+            <WelcomeScreen handleCompleteProfile={handleCompleteProfile} logout={logout} />
+          </div>
+        )
+        
       }
     } else {
       return (
