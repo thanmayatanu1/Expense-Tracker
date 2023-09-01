@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import classes from './ExpenseItems.module.css';
 
 
+
 const ExpenseTracker = () => {
   const [theme, setTheme] = useState('light');
   const [isPremiumActivated, setIsPremiumActivated] = useState(false);
@@ -160,6 +161,7 @@ const ExpenseTracker = () => {
           
         </div>
       )}
+        
     </div>
   );
 };

@@ -217,7 +217,7 @@ const handleForgotPassword = async () => {
        else {
         return (
           <div>
-            <WelcomeScreen handleCompleteProfile={handleCompleteProfile} logout={logout} />
+            <WelcomeScreen handleCompleteProfile={handleCompleteProfile} logout={logout} sendEmailVerification={sendEmailVerification}/>
           </div>
         )
         

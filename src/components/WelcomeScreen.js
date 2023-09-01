@@ -2,7 +2,7 @@ import ExpenseTracker from './ExpenseItems';
 import classes from './AuthForm.module.css';
 import {  Container, Row, Col } from 'react-bootstrap';
 
-function WelcomeScreen({ handleCompleteProfile, logout }) {
+function WelcomeScreen({ handleCompleteProfile, logout, sendEmailVerification }) {
     return (
         <Container>
           <Row>
@@ -16,6 +16,8 @@ function WelcomeScreen({ handleCompleteProfile, logout }) {
                   <h3>Your profile is incomplete</h3>
                   <span className={classes.completeprofile} onClick={handleCompleteProfile}>Complete Profile</span>
                   </div>
+                  <button className={classes.logoutbutton} onClick={sendEmailVerification}>Verify Email</button>
+
                   <button className={classes.logoutbutton} onClick={logout}>logout user</button>
                   </div>
                   <div className={classes.verticalline}></div>
