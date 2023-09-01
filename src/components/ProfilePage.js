@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import classes from './AuthForm.module.css';
 
-function ProfilePage({ fullName, profilePhotoUrl, setFullName, setProfilePhotoUrl, logout, handleUpdateProfile }) {
+function ProfilePage({ fullName, profilePhotoUrl, setFullName, setProfilePhotoUrl, logout, handleUpdateProfile , }) {
   return (
     <Container>
       <Row>
@@ -17,7 +17,8 @@ function ProfilePage({ fullName, profilePhotoUrl, setFullName, setProfilePhotoUr
                 Your profile is 64% completed. A completed profile has a higher chances of landing a job.
                 </div>
         </div>
-        <button className={classes.logoutbutton} onClick={logout}>Cancel</button>
+        <button className={classes.logoutbutton} onClick={logout}>Logout</button>
+       
         
         <div >
         </div>
