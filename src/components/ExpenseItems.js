@@ -7,9 +7,12 @@ import classes from './ExpenseItems.module.css';
 
 
 
-const ExpenseTracker = () => {
+
+const ExpenseTracker = ({loggedInEmail }) => {
   const [theme, setTheme] = useState('light');
   const [isPremiumActivated, setIsPremiumActivated] = useState(false);
+
+  
 
   const toggleTheme = () => {
     if (theme === 'light') {
@@ -30,17 +33,7 @@ const ExpenseTracker = () => {
 
 
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
   const expenses = useSelector(state => state.expenses.expenses);
-
-
-  const handleLogin = () => {
-    dispatch({ type: 'LOGIN', payload: { token: 'your-token-value', userId: 'your-user-id' } });
-  };
-
-  const handleLogout = () => {
-    dispatch({ type: 'LOGOUT' });
-  };
 
   const handleExpenseSubmit = async (e) => {
     e.preventDefault();
@@ -60,6 +53,7 @@ const ExpenseTracker = () => {
 
     e.target.reset();
   };
+
 
   const handleDeleteExpense = async (expenseId) => {
     dispatch({ type: 'DELETE_EXPENSE', payload: expenseId });
@@ -87,7 +81,7 @@ const ExpenseTracker = () => {
 
   return (
     <div className={classes.expensetracker} >
-      {isLoggedIn ? (
+       
         <div className={classes.formgroup}>
           <h1>Expense Tracker</h1>
           <form onSubmit={handleExpenseSubmit}>
@@ -149,21 +143,15 @@ const ExpenseTracker = () => {
           </table>
           {totalExpenses > 10000 && 
           <button className = {classes.togglebutton} onClick={() => setIsPremiumActivated(true)}>Activate Premium</button>}
-          <button className = {classes.closebutton} onClick={handleLogout}>Close</button>
+          
           {isPremiumActivated && (
           <button className = {classes.togglebutton} onClick={toggleTheme}>Toggle Theme</button>
           )}
           <button className = {classes.downloadbutton} onClick={downloadExpensesAsCSV}>Download File</button>
         </div>
-      ) : (
-        <div >
-          <h1 className={classes.addexpense} onClick={handleLogin}> Click Here To Add Expense</h1>
-          
-        </div>
-      )}
-        
-    </div>
-  );
-};
+     
+      </div>
+    );
+  };
 
 export default ExpenseTracker;
